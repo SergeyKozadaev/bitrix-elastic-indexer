@@ -80,6 +80,11 @@ class Mapper
                 $mapping->setProperty('CATALOG_PRICE_' . $entry['ID'], new PropertyMapping('float'));
                 $mapping->setProperty('CATALOG_CURRENCY_' . $entry['ID'], new PropertyMapping('keyword'));
             }
+
+            $mapping->setProperty('WEIGHT', new PropertyMapping('float'));
+            $mapping->setProperty('WIDTH', new PropertyMapping('float'));
+            $mapping->setProperty('HEIGHT' , new PropertyMapping('float'));
+            $mapping->setProperty('LENGTH' , new PropertyMapping('float'));
         }
 
         return $mapping;
