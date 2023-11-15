@@ -5,6 +5,7 @@ namespace Sheerockoff\BitrixElastic;
 use _CIBElement;
 use Bitrix\Catalog\Model\Price;
 use CCatalogStoreProduct;
+use CCatalogProduct;
 use CIBlockElement;
 use CIBlockSection;
 use CModule;
@@ -21,17 +22,21 @@ class Keeper
         $this->elastic = $elastic;
     }
 
-    public function getElementRawData(_CIBElement $element): array
+    public function getElementRawData(_CIBElement $element, $skipProps = []): array
     {
         $data = [];
 
         foreach ($element->GetFields() as $field => $value) {
-            if (!strstr($field, '~')) {
+            if (strpos($field, '~') === false) {
                 $data[$field] = $value;
             }
         }
 
         foreach ($element->GetProperties() as $property) {
+            if ($skipProps && in_array($property['CODE'], $skipProps, true)) {
+                continue;
+            }
+
             if ($property['PROPERTY_TYPE'] === 'L') {
                 $data['PROPERTY_' . $property['CODE']] = $property['VALUE_ENUM_ID'];
                 $data['PROPERTY_' . $property['CODE'] . '_VALUE'] = $property['VALUE'];
@@ -78,6 +83,27 @@ class Keeper
             while ($entry = $rs->fetch()) {
                 $data['CATALOG_PRICE_' . $entry['CATALOG_GROUP_ID']] = $entry['PRICE'] ?? null;
                 $data['CATALOG_CURRENCY_' . $entry['CATALOG_GROUP_ID']] = $entry['CURRENCY'] ?? null;
+            }
+
+            $rs = CCatalogProduct::GetList(
+                [],
+                [
+                    'ID' => $element->fields['ID']
+                ],
+                false,
+                false,
+                [
+                    'WEIGHT',
+                    'WIDTH',
+                    'HEIGHT',
+                    'LENGTH'
+                ]
+            );
+            if ($entry = $rs->Fetch()) {
+                $data['WEIGHT'] = $entry['WEIGHT'];
+                $data['WIDTH'] = $entry['WIDTH'];
+                $data['HEIGHT'] = $entry['HEIGHT'];
+                $data['LENGTH'] = $entry['LENGTH'];
             }
         }
 
