@@ -122,6 +122,11 @@ class Keeper
                 continue;
             }
 
+            // Учти, значение $data[$key] м.б. null\false и т.п. для кейса удаления\обнуления.
+            if (!array_key_exists($key, $data)) {
+                continue;
+            }
+
             $rawValue = $data[$key] ?: null;
 
             if (is_array($rawValue) && array_key_exists('TEXT', $rawValue)) {
