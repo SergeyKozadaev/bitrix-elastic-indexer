@@ -8,6 +8,18 @@
 
 ## Установка
 
+Необходимо явно указать репозиторий форка в секции repositories файла composer.json, например:
+```json
+{
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/intaro/bitrix-elastic-indexer"
+    }
+  ]
+}
+```
+Добавить в composer пакет sheerockoff/bitrix-elastic-indexer:
 ```bash
 composer require sheerockoff/bitrix-elastic-indexer
 ```
