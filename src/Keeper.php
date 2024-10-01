@@ -22,7 +22,7 @@ class Keeper
         $this->elastic = $elastic;
     }
 
-    public function getElementRawData(_CIBElement $element, $skipProps = []): array
+    public function getElementRawData(_CIBElement $element, array $skipProps = []): array
     {
         $data = [];
 
